@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #define PROGRAMNAME "CexDumper"
-#define VERSION "v0.0.1"
+#define VERSION "v0.2"
 
 void printUsage(char const *fileName)
 {
