@@ -1,34 +1,71 @@
-# CexDumper v0.2 - C Hex Dumper
+# CexDumper v0.4
 
-Hex Dumper written in C.
+Small hex dumper written in C.
 
-## Compilation
+## What It Does
 
-You can compile the project using GCC or any other standard C compiler:
+- Reads a file in binary mode
+- Prints file bytes in hex format to terminal
+- Can save hex dump output to a file
+- Supports basic CLI flags
+
+## Build
+
+Compile with GCC:
 
 ```bash
 gcc main.c -o CexDumper -Wall -Werror
 ```
 
-## How to Run
-
-Provide the input file path as an argument when running:
+## Usage
 
 ```bash
-./CexDumper <filename>
+./CexDumper [options] <input_file>
 ```
 
-**Example:**
+## Options
+
+- `-h` Show help
+- `-v` Show program version
+- `-o <file>` Save dump output to file
+
+## Examples
+
+Print dump to terminal:
 
 ```bash
 ./CexDumper example.txt
 ```
 
-## TODOs
+Save dump to file:
 
-- [ ] Update README file
-- [x] Read text file and print to console
-- [x] Take arguments for "output file" "verbose" "help" "version" etc.
-- [x] Turn text into hex and print
-- [ ] Save hex to output file
-- [ ] put ascii version of the hex on the right side
+```bash
+./CexDumper -o output.hex example.txt
+```
+
+Show version:
+
+```bash
+./CexDumper -v
+```
+
+Show help:
+
+```bash
+./CexDumper -h
+```
+
+## Output Format
+
+- Each line starts with an offset
+- Hex byte groups are printed after the offset
+- Final file length/offset summary is printed at the end
+
+## Roadmap
+
+- [x] Read file and print dump to console
+- [x] Add CLI options (`-h`, `-v`, `-o`)
+- [x] Save hex dump to output file
+- [ ] Add canonical hex + ASCII view
+- [ ] Add output formats (octal, decimal)
+- [ ] Add skip/length arguments
