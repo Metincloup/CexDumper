@@ -1,34 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <getopt.h>
 
 #define PROGRAMNAME "CexDumper"
-#define VERSION "v0.2"
+#define VERSION "v0.3"
 
-void printUsage(char const *fileName)
-{
-
-    printf("Usage: %s <filename>", fileName);
-    // Print arguments here
-}
-
-int main(int argc, char const *argv[])
+void printUsage(char *fileName)
 {
     printf("%s %s - C Hex Dumper\n\n", PROGRAMNAME, VERSION);
+    printf("Usage: %s [options] <filename>\n\n", fileName);
+    printf("Options:\n  -h        Show this help message\n  -v        Verbose output\n  -V        Show version\n  -o <file> Write output to file");
+
+    exit(EXIT_SUCCESS);
+}
+
+int main(int argc, char *argv[])
+{
 
     FILE *fp;
     size_t length;
     char *buffer;
+    int opt;
     unsigned int position = 0;
-    const char *filePath;
+    char *inputFilePath;
+    char *outputFilePath;
 
     if (argc < 2)
     {
         printUsage(argv[0]);
         return EXIT_FAILURE;
     }
-    filePath = argv[1];
 
-    fp = fopen(filePath, "rb");
+    inputFilePath = argv[argc - 1];
+
+    while ((opt = getopt(argc, argv, ":o:hvV")) != -1)
+    {
+        switch (opt)
+        {
+        case 'o':
+            printf(optarg);
+            outputFilePath = argv[optind];
+            break;
+        case 'v':
+            printf("%s %s\n\n", PROGRAMNAME, VERSION);
+            exit(EXIT_SUCCESS);
+            break;
+        case 'h':
+            printUsage(argv[0]);
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    fp = fopen(inputFilePath, "rb");
     if (!fp)
     {
         perror("Could not open file");
@@ -37,8 +64,6 @@ int main(int argc, char const *argv[])
     fseek(fp, 0L, SEEK_END);
     length = ftell(fp);
     fseek(fp, 0L, SEEK_SET);
-
-    printf("File length is : %ld \n", length);
 
     buffer = (char *)calloc(length, sizeof(char));
     if (buffer == NULL)
@@ -53,8 +78,6 @@ int main(int argc, char const *argv[])
         return EXIT_FAILURE;
     }
     fclose(fp);
-    //  Don't print text and length in the future
-    printf("Text in %s file:\n%s\n\n\n\n", filePath, buffer);
 
     for (size_t i = 0; i < length; i = i + 2)
     {
@@ -67,7 +90,7 @@ int main(int argc, char const *argv[])
         position = position + 2;
     }
     printf("\n");
-    printf("%08x", position);
+    printf("%08lx", length);
 
     free(buffer);
     return 0;
